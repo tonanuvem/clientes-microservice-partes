@@ -7,7 +7,7 @@ Verificar o conteúdo:
 
 > ls -lh
 
-Executar parte 0:
+Executar parte 0 (CTRL + C para finalizar e rodar a próxima parte):
 
 > ./run0.sh 
 
