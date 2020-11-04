@@ -1,0 +1,34 @@
+swagger: "2.0"
+info:
+  description: Swagger file
+  version: "1.0.0"
+  title: Swagger ReST Clientes
+consumes:
+  - application/json
+produces:
+  - application/json
+
+basePath: /api
+
+paths:
+  /clientes:
+    get:
+      operationId: clientes.read_all
+      tags:
+        - Clientes
+      summary: Lista de Clientes
+      description: Lista de Clientes
+      responses:
+        200:
+          description: Sucesso na leitura de Clientes
+          schema:
+            type: array
+            items:
+              properties:
+                fname:
+                  type: string
+                lname:
+                  type: string
+                timestamp:
+                  type: string
+
