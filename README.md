@@ -1,6 +1,9 @@
 Baixar o repo:
 
 > git clone https://github.com/tonanuvem/clientes-microservice-partes.git
+
+Entrar na pasta:
+
 > cd clientes-microservice-partes/
 
 Verificar o conteúdo:
