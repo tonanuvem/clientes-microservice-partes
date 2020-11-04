@@ -1,5 +1,5 @@
 pip3 install --upgrade pip
-#python3 -m venv venv_clientes
+python3 -m venv venv_clientes
 source venv_clientes/bin/activate
 pip3 install flask
 pip3 install flask-cors
