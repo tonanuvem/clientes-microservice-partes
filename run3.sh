@@ -1,6 +1,7 @@
 #source venv_clientes/bin/activate
 
 npx -y create-react-app clientes_admin && cd clientes_admin
+npm install react@18 react-dom@18 web-vitals
 npm i react-admin ra-data-simple-rest @mui/material @emotion/react @emotion/styled
 
 SERVER_IP=$(curl checkip.amazonaws.com)
