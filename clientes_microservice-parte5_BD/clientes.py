@@ -1,5 +1,6 @@
 from datetime import datetime
 from flask import jsonify, make_response, abort
+from shortuuid import uuid
 
 from pymongo import MongoClient
 
@@ -12,11 +13,13 @@ def get_dict_from_mongodb():
     for i in itens_db:
             i.pop('_id') # retira id: criado automaticamente 
             item = dict(i)
-            PEOPLE[item["lname"]] = (i)
+            PEOPLE[item["id"]] = (i)
     return PEOPLE
 
 def get_timestamp():
     return datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
+
+
 
 def read_all():
     PEOPLE = get_dict_from_mongodb()
@@ -30,64 +33,72 @@ def read_all():
     clientes.headers['Content-Range'] = content_range
     return clientes
 
-def read_one(lname):
+def read_one(id):
     PEOPLE = get_dict_from_mongodb()
-    if lname in PEOPLE:
-        person = PEOPLE.get(lname)
+    if id in PEOPLE:
+        person = PEOPLE.get(id)
     else:
         abort(
-            404, "Pessoa com sobrenome {lname} nao encontrada".format(lname=lname)
+            404, "Pessoa com ID {id} nao encontrada".format(id=id)
         )
     return person
 
 def create(person):
+    PEOPLE = get_dict_from_mongodb()
     lname = person.get("lname", None)
     fname = person.get("fname", None)
+    for id in PEOPLE:
+        if fname == PEOPLE[id]["fname"] and lname == PEOPLE[id]["lname"]:            
+            # Cliente já existe
+            abort(
+                406,
+                "Pessoa com nome "+fname+" e sobrenome "+lname+" ja existe"
+            )
+        else:
+            continue
+    # Cliente nao existe, pode CRIAR:
+    id=str(uuid())
+    item = {
+        "id": id,
+        "lname": lname,
+        "fname": fname,
+        "timestamp": get_timestamp(),
+    }
+    db.clientes.insert_one(item)
     PEOPLE = get_dict_from_mongodb()
-    if lname not in PEOPLE and lname is not None:
-        item = {
-            "lname": lname,
-            "fname": fname,
-            "timestamp": get_timestamp(),
-        }
-        db.clientes.insert_one(item)
-        return make_response(
-            "{lname} criado com sucesso".format(lname=lname), 201
-        )
-    else:
-        abort(
-            406,
-            "Pessoa com sobrenome {lname} ja existe".format(lname=lname),
-        )
+    return make_response(
+        PEOPLE[id],201
+        #"Cliente com nome "+fname+" e sobrenome "+lname+" criado com sucesso", 201
+    )
 
-def update(lname, person):
-    query = { "lname": lname }
+def update(id, person):
+    query = { "id": id }
     update = { "$set": {
-            "lname": lname,
+            "id": id,
             "fname": person.get("fname"),
+            "lname": person.get("lname"),
             "timestamp": get_timestamp(), } 
         }
     PEOPLE = get_dict_from_mongodb()
-
-    if lname in PEOPLE:
+    if id in PEOPLE:
         db.clientes.update_one(query, update)
         PEOPLE = get_dict_from_mongodb()
-        return PEOPLE[lname]
+
+        return PEOPLE[id]
     else:
         abort(
-            404, "Pessoa com sobrenome {lname} nao encontrada".format(lname=lname)
+            404, "Pessoa com {id} nao encontrada".format(id=id)
         )
 
-def delete(lname):
-    query = { "lname": lname }
+def delete(id):
+    query = { "id": id }
     PEOPLE = get_dict_from_mongodb()
-    if lname in PEOPLE:
+    if id in PEOPLE:
         db.clientes.delete_one(query)
         return make_response(
-            "{lname} deletado com sucesso".format(lname=lname), 200
+            "{id} deletado com sucesso".format(id=id), 200
         )
     else:
         abort(
-            404, "Pessoa com sobrenome {lname} nao encontrada".format(lname=lname)
+            404, "Pessoa com sobrenome {lname} nao encontrada".format(id=id)
         )
-
