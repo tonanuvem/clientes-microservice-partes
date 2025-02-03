@@ -3,6 +3,9 @@
 npx -y create-react-app clientes_admin && cd clientes_admin
 npm i react-admin ra-data-simple-rest @mui/material @emotion/react @emotion/styled
 
+SERVER_IP=$(curl checkip.amazonaws.com)
+sed -i 's|IP|'$SERVER_IP'|' clientes_microservice-parte3_SPA/src/App.js
+
 rm clientes_admin/src/App.js
 cp clientes_microservice-parte3_SPA/src/App.js clientes_admin/src/App.js
 
