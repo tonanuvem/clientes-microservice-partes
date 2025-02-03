@@ -7,9 +7,10 @@ npm i react-admin ra-data-simple-rest @mui/material @emotion/react @emotion/styl
 SERVER_IP=$(curl checkip.amazonaws.com)
 sed -i 's|IP|'$SERVER_IP'|' ./clientes_microservice-parte3_SPA/src/App.js
 
-rm clientes_admin/src/App.js
-cp clientes_microservice-parte3_SPA/src/App.js clientes_admin/src/App.js
+rm ./clientes_admin/src/App.js
+cp ./clientes_microservice-parte3_SPA/src/App.js ./clientes_admin/src/App.js
 
+cd clientes-admin 
 npm start &
 python3 clientes_microservice-parte3_SPA/server.py &
 
