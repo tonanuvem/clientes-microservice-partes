@@ -1,21 +1,26 @@
 from datetime import datetime
 from flask import jsonify, make_response, abort
+from shortuuid import uuid
 
 def get_timestamp():
     return datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
 
+id1, id2, id3 = str(uuid()), str(uuid()), str(uuid())
 PEOPLE = {
-    "Jones": {
+    id1: {
+        "id": id1,
         "fname": "Indiana",
         "lname": "Jones",
         "timestamp": get_timestamp(),
     },
-    "Sparrow": {
+    id2: {
+        "id": id2,
         "fname": "Jack",
-        "lname": " Sparrow",
+        "lname": "Sparrow",
         "timestamp": get_timestamp(),
     },
-    "Snow": {
+    id3: {
+        "id": id3,
         "fname": "John",
         "lname": "Snow",
         "timestamp": get_timestamp(),
@@ -32,4 +37,3 @@ def read_all():
     clientes.headers['Access-Control-Expose-Headers'] = 'Content-Range'
     clientes.headers['Content-Range'] = content_range
     return clientes
-
