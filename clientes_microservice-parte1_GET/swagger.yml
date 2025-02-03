@@ -25,10 +25,11 @@ paths:
             type: array
             items:
               properties:
+                id:
+                  type: string
                 fname:
                   type: string
                 lname:
                   type: string
                 timestamp:
                   type: string
-
